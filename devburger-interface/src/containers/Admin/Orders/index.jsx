@@ -70,15 +70,16 @@ export function Orders() {
   return (
     <>
       <Filter>
-        {orderStatusOptions.map((status) => {
+        {orderStatusOptions.map((status) => (
           <FilterOptions
             key={status.id}
             onClick={() => handleStatus(status)}
             $isActiveStatus={activeStatus === status.id}
           >
             {status.label}
-          </FilterOptions>;
-        })}
+          </FilterOptions>
+        ))}
+        ;
       </Filter>
       <TableContainer component={Paper}>
         <Table aria-label="collapsible table">

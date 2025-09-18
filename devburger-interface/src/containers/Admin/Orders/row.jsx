@@ -56,7 +56,7 @@ export function Row(props) {
         <TableCell>
           <SelectStatus
             options={orderStatusOptions.filter((status) => status.id !== 0)}
-            placeholder="Status"
+            placeholder="Pedido Realizado"
             defaultValue={orderStatusOptions.find(
               (status) => status.value == row.status || null
             )}
