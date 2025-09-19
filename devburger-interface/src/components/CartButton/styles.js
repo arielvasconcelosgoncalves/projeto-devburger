@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const ContainerButton = styled.button`
   background-color: #975ba6;
@@ -7,9 +7,12 @@ export const ContainerButton = styled.button`
   border: 0;
   border-radius: 5px;
   font-size: 30px;
-  color: #FFF;
+  color: #fff;
 
-  &:hover{
+  &:hover {
     background-color: #6f357c;
   }
-`
+  &:active {
+    background-color: #4b244f;
+  }
+`;

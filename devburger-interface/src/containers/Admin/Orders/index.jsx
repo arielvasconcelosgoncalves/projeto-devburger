@@ -50,7 +50,7 @@ export function Orders() {
         (item) => item.id === activeStatus
       );
 
-      const newFilteredOrders = orders.filte(
+      const newFilteredOrders = orders.filter(
         (order) => order.status === orderStatusOptions[statusIndex].value
       );
       setFilteredOrders(newFilteredOrders);
