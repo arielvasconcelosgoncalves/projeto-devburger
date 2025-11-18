@@ -1,13 +1,16 @@
-module.exports = {
+import "dotenv/config.js";
+
+export default {
   dialect: "postgres",
-  host: "localhost",
-  port: 5433,
-  username: "postgres",
-  password: "postgres",
-  database: "devburger",
+  host: process.env.DB_HOST,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT || 5432,
   define: {
-    timestamps: true,
     underscored: true,
     underscoredAll: true,
+    timestamps: true,
+    freezeTableName: false,
   },
 };
