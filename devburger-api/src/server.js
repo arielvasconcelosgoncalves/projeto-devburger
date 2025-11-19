@@ -1,4 +1,5 @@
-import app from './app'
+import app from "./app.js";
 
+const PORT = process.env.PORT || 3001;
 
-app.listen(3001, () => console.log('The server is running out at pot 3001..'))
+app.listen(PORT, () => console.log("The server is running out at pot 3001.."));
