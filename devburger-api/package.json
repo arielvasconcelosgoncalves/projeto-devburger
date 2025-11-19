@@ -8,8 +8,7 @@
   },
   "scripts": {
     "dev": "nodemon",
-    "start": "node src/server.js",
-    "migrate": "sequelize-cli db:migrate"
+    "start": "yarn migrate && node src/server.js",
   },
   "author": {
     "name": "Ariel Vasconcelos",
