@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "nodemon",
-    "start": "yarn migrate && node src/server.js",
+    "start": "yarn migrate && node src/server.js"
   },
   "author": {
     "name": "Ariel Vasconcelos",
