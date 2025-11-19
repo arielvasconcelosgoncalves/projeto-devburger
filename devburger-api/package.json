@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "nodemon",
+    "migrate": "sequelize-cli db:migrate",
     "start": "yarn migrate && node src/server.js"
   },
   "author": {
