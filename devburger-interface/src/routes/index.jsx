@@ -14,11 +14,14 @@ import { Checkout } from "../containers/Checkout";
 import { CompletePayment } from "../containers/CompletePayment";
 import { UserLayout } from "../layouts/UserLayout";
 import { AdminLayout } from "../layouts/AdminLayout";
+import { ProtectedRoute } from "./ProtectRoute";
 
 export function Router() {
   return (
     <Routes>
-      <Route path="/" element={<UserLayout />}>
+      <Route path="/" element={<ProtectedRoute>
+        <UserLayout />
+      </ProtectedRoute>}>
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/cart" element={<Cart />} />
@@ -26,7 +29,9 @@ export function Router() {
         <Route path="/complete-payment" element={<CompletePayment />} />
       </Route>
 
-      <Route path="/admin" element={<AdminLayout />}>
+      <Route path="/admin" element={<ProtectedRoute>
+        <AdminLayout />
+      </ProtectedRoute>}>
         <Route path="/admin/orders" element={<Orders />}></Route>
         <Route path="/admin/products" element={<Products />}></Route>
         <Route path="/admin/new-product" element={<NewProduct />}></Route>
