@@ -14,4 +14,8 @@ export default {
     timestamps: true,
     freezeTableName: false,
   },
+  ssl: {
+    require: true,
+    rejectUnauthorized: false, // necessário no Render
+  },
 };
