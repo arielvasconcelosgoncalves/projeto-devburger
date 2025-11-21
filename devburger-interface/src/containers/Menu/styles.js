@@ -10,11 +10,11 @@ export const Container = styled.div`
   background-color: #f0f0f0;
   background:
     linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
-    url("${Background}");
+    url(${Background});
 `;
 
 export const Banner = styled.div`
-  background: url("${bannerMenu}");
+  background: url(${bannerMenu});
   background-position: center;
   background-color: #1f1f1f;
   background-repeat: no-repeat;
@@ -75,7 +75,7 @@ export const CategoryButton = styled(Link)`
 export const Back = styled.button`
   width: 80px;
   height: 80px;
-  background: url("${backArrow}");
+  background: url(${backArrow});
   background-size: contain;
   background-repeat: no-repeat;
   border: none;

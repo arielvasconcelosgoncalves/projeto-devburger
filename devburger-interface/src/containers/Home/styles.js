@@ -3,7 +3,7 @@ import bannerHome from "../../assets/img/bannerHome.svg";
 import Background from "../../assets/img/background.svg";
 
 export const Banner = styled.div`
-  background: url("${bannerHome}");
+  background: url(${bannerHome});
   background-size: cover;
   background-position: center;
   height: 480px;

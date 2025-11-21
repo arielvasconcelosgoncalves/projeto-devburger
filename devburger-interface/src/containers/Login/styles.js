@@ -10,7 +10,7 @@ export const Container = styled.div`
 `;
 
 export const LeftContainer = styled.div`
-  background: url("${BackgroundLogin}");
+  background: url(${BackgroundLogin});
   background-size: cover;
   background-position: center;
   height: 100%;
@@ -34,7 +34,7 @@ export const RightContainer = styled.div`
   height: 100%;
   width: 100%;
   max-width: 50%;
-  background: url("${Background}");
+  background: url(${Background});
   background-color: #1e1e1e;
   p {
     color: #fff;
