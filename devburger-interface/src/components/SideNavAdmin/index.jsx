@@ -1,6 +1,6 @@
 import { NavLink, NavLinkContainer, Container, Footer } from "./styles.js";
 import { navLinks } from "./navLinks.jsx";
-import Logo from "../../assets/img/Logo.svg";
+import Logo from "../../assets/img/logo.svg";
 import { useUser } from "../../hooks/UserContext.jsx";
 import { useLocation } from "react-router-dom";
 
