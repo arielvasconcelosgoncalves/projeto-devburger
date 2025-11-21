@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import BackgroundLogin from "../../assets/img/BackgroundLogin.svg";
+import BackgroundLogin from "../../assets/img/backgroundLogin.svg";
 import Background from "../../assets/img/background.svg";
 import { Link as ReactLink } from "react-router-dom";
 
