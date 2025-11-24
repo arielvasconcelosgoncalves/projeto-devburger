@@ -44,7 +44,6 @@ export function ChangeProduct() {
   useEffect(() => {
     async function loadCategories() {
       const { data } = await api.get("categories");
-
       setCategories(data);
     }
     loadCategories();
@@ -58,43 +57,47 @@ export function ChangeProduct() {
   } = useForm({
     resolver: yupResolver(schema),
   });
+
   const onSubmit = async (data) => {
     const productFormData = new FormData();
+
+    // Campos normais
     productFormData.append("name", data.name);
     productFormData.append("price", data.price * 100);
     productFormData.append("category_id", data.category.id);
-    productFormData.append("offer", data.offer);
-    productFormData.append("file", data.file); // ← TEM QUE SER ESSE NOME
+    productFormData.append("offer", data.offer ? "true" : "false");
+
+    // Se o usuário escolheu um arquivo novo, envia:
+    if (data.file && data.file.length > 0) {
+      productFormData.append("file", data.file[0]);
+    }
+
+    // Log completo do que está indo
+    console.log("📤 FORM DATA ENVIADO:");
+    for (let p of productFormData.entries()) {
+      console.log(p[0], p[1]);
+    }
 
     try {
-      console.log(
-        "📤 ENVIANDO PARA O BACKEND:",
-        Object.fromEntries(productFormData)
-      );
-
       const response = await api.put(
         `/products/${product.id}`,
-        productFormData
+        productFormData // sem headers!
       );
 
+      console.log("📥 RESPOSTA BACKEND:", response.data);
       toast.success("Produto editado com sucesso!");
-      console.log("📥 RESPOSTA:", response.data);
 
       setTimeout(() => navigate("/admin/products"), 2000);
     } catch (error) {
-      console.log("❌ ERRO DETALHADO:", error);
-
+      console.log("❌ ERRO DETALHADO:", error.response?.data || error);
       toast.error(
         error.response?.data?.error ||
           error.message ||
           "Erro desconhecido ao editar"
       );
     }
-
-    setTimeout(() => {
-      navigate("/admin/products");
-    }, 2000);
   };
+
   return (
     <Container>
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -107,6 +110,7 @@ export function ChangeProduct() {
           />
           <ErrorMessage>{errors?.name?.message}</ErrorMessage>
         </InputGroup>
+
         <InputGroup>
           <Label>Preço</Label>
           <Input
@@ -116,6 +120,7 @@ export function ChangeProduct() {
           />
           <ErrorMessage>{errors?.price?.message}</ErrorMessage>
         </InputGroup>
+
         <InputGroup>
           <LabelUpload>
             <ImageIcon />
@@ -132,6 +137,7 @@ export function ChangeProduct() {
           </LabelUpload>
           <ErrorMessage>{errors?.file?.message}</ErrorMessage>
         </InputGroup>
+
         <InputGroup>
           <Label>Categoria</Label>
           <Controller

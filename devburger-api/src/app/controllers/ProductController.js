@@ -5,10 +5,6 @@ import User from "../models/User.js";
 
 class ProductController {
   async store(request, response) {
-    console.log("📌 STORE PRODUCT CALLED");
-    console.log("BODY:", request.body);
-    console.log("FILE:", request.file);
-
     const schema = Yup.object({
       name: Yup.string().required(),
       price: Yup.number().required(),
@@ -19,25 +15,16 @@ class ProductController {
     try {
       schema.validateSync(request.body, { abortEarly: false });
     } catch (err) {
-      console.log("❌ VALIDATION ERROR:", err);
       return response.status(400).json({ error: err.errors });
     }
 
     const { admin: isAdmin } = await User.findByPk(request.userId);
 
-    console.log("IS ADMIN?", isAdmin);
-
     if (!isAdmin) {
-      console.log("❌ BLOCKED: NOT ADMIN");
       return response.status(401).json();
     }
 
-    console.log("REQUEST.FILE.PATH:", request.file?.path);
-
     const imageURL = request.file?.path;
-    if (!imageURL) {
-      console.log("❌ ERROR: No image uploaded");
-    }
 
     const { name, price, category_id, offer } = request.body;
 
@@ -50,25 +37,27 @@ class ProductController {
         offer,
       });
 
-      console.log("✅ PRODUCT CREATED:", product);
-
       return response.status(201).json(product);
     } catch (error) {
-      console.log("🔥 ERROR CREATING PRODUCT:", error);
       return response.status(500).json({ error: "Internal error", details: error.message });
     }
   }
 
   async update(request, response) {
-    console.log("===== 📌 UPDATE PRODUCT =====");
-
-    console.log("🔥 RAW REQUEST FILE:", request.file); // <-- AQUI
-    console.log("📥 BODY RECEIVED:", request.body);
-    console.log("📸 FILE RECEIVED:", request.file);
-    console.log("🔑 PARAMS:", request.params);
+    console.log("===== 📌 PRODUCT UPDATE =====");
+    console.log("BODY:", request.body);
+    console.log("FILE:", request.file);
 
     try {
-      // Converter offer string para boolean
+      // Convertendo tipos manualmente
+      if (request.body.price) {
+        request.body.price = Number(request.body.price);
+      }
+
+      if (request.body.category_id) {
+        request.body.category_id = Number(request.body.category_id);
+      }
+
       if (request.body.offer === "true") request.body.offer = true;
       if (request.body.offer === "false") request.body.offer = false;
 
@@ -83,7 +72,6 @@ class ProductController {
 
       const { admin: isAdmin } = await User.findByPk(request.userId);
       if (!isAdmin) {
-        console.log("❌ Usuário não é admin");
         return response.status(401).json({ error: "not authorized" });
       }
 
@@ -91,25 +79,20 @@ class ProductController {
       const findProduct = await Product.findByPk(id);
 
       if (!findProduct) {
-        console.log("❌ Produto não encontrado");
         return response.status(400).json({ error: "Invalid product ID" });
       }
 
-      console.log("🔧 ATUALIZANDO PRODUTO...");
-
       await findProduct.update({
-        name: request.body.name,
-        price: request.body.price,
-        category_id: request.body.category_id,
-        offer: request.body.offer,
+        name: request.body.name ?? findProduct.name,
+        price: request.body.price ?? findProduct.price,
+        category_id: request.body.category_id ?? findProduct.category_id,
+        offer: request.body.offer ?? findProduct.offer,
         ...(request.file && { path: request.file.path }),
       });
 
-      console.log("✅ PRODUTO ATUALIZADO COM SUCESSO");
       return response.json({ message: "updated successfully" });
     } catch (error) {
-      console.log("🔥 ERRO CAPTURADO NO BACKEND:");
-      console.error(error); // <-- ESSA LINHA MOSTRA O ERRO REAL
+      console.log("🔥 UPDATE ERROR:", error);
 
       return response.status(500).json({
         error: "Internal server error",
@@ -119,8 +102,6 @@ class ProductController {
   }
 
   async index(request, response) {
-    console.log("📌 GET /products");
-
     try {
       const products = await Product.findAll({
         include: [
@@ -132,11 +113,8 @@ class ProductController {
         ],
       });
 
-      console.log("PRODUCTS RETURNED:", products.length);
-
       return response.json(products);
     } catch (error) {
-      console.log("🔥 ERROR FETCHING PRODUCTS:", error);
       return response.status(500).json({ error: "Internal server error" });
     }
   }
