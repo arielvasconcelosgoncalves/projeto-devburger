@@ -11,12 +11,10 @@ class Product extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            const baseURL = process.env.APP_URL || "http://localhost:3001";
-            return `${baseURL}/product-file/${this.path}`;
+            return this.path; // Agora retorna a URL do Cloudinary direto
           },
         },
       },
-
       {
         sequelize,
       }

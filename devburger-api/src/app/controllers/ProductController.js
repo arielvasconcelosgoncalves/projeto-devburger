@@ -23,16 +23,15 @@ class ProductController {
       return response.status(401).json();
     }
 
-    const { filename: path } = request.file;
+    const imageURL = request.file.path; // URL pública
     const { name, price, category_id, offer } = request.body;
-
-    const product = await Product.create({
-      name,
-      price,
-      category_id,
-      path,
-      offer,
-    });
+const product = await Product.create({
+  name,
+  price,
+  category_id,
+  path: imageURL, 
+  offer,
+});
 
     return response.status(201).json(product);
   }
@@ -65,8 +64,8 @@ class ProductController {
 
     let path;
     if (request.file) {
-      path = request.file.filename;
-    }
+  path = request.file.path; // URL do Cloudinary
+}
 
     const { name, price, category_id, offer } = request.body;
 
