@@ -68,11 +68,30 @@ export function ChangeProduct() {
       productFormData.append("file", data.file[0]);
     }
 
-    await toast.promise(api.put(`/products/${product.id}`, productFormData), {
-      pending: "Editando o produto...",
-      success: "Produto editado com sucesso!",
-      error: "Erro ao editar o produto",
-    });
+    try {
+      console.log(
+        "📤 ENVIANDO PARA O BACKEND:",
+        Object.fromEntries(productFormData)
+      );
+
+      const response = await api.put(
+        `/products/${product.id}`,
+        productFormData
+      );
+
+      toast.success("Produto editado com sucesso!");
+      console.log("📥 RESPOSTA:", response.data);
+
+      setTimeout(() => navigate("/admin/products"), 2000);
+    } catch (error) {
+      console.log("❌ ERRO DETALHADO:", error);
+
+      toast.error(
+        error.response?.data?.error ||
+          error.message ||
+          "Erro desconhecido ao editar"
+      );
+    }
 
     setTimeout(() => {
       navigate("/admin/products");

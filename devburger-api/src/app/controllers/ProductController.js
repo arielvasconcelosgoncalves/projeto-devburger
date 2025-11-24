@@ -60,6 +60,9 @@ class ProductController {
   }
 
   async update(request, response) {
+    if (request.body.offer === "true") request.body.offer = true;
+    if (request.body.offer === "false") request.body.offer = false;
+
     console.log("📌 UPDATE PRODUCT CALLED");
     console.log("BODY RECEIVED:", request.body);
     console.log("FILE RECEIVED:", request.file);
