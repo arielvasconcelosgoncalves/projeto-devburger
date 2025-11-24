@@ -25,13 +25,13 @@ class ProductController {
 
     const imageURL = request.file.path; // URL pública
     const { name, price, category_id, offer } = request.body;
-const product = await Product.create({
-  name,
-  price,
-  category_id,
-  path: imageURL, 
-  offer,
-});
+    const product = await Product.create({
+      name,
+      price,
+      category_id,
+      path: imageURL,
+      offer,
+    });
 
     return response.status(201).json(product);
   }
@@ -49,8 +49,8 @@ const product = await Product.create({
     } catch (err) {
       return response.status(400).json({ error: err.errors });
     }
-    const { admin: isAdmin } = await User.findByPk(request.userId);
 
+    const { admin: isAdmin } = await User.findByPk(request.userId);
     if (!isAdmin) {
       return response.status(401).json();
     }
@@ -62,29 +62,17 @@ const product = await Product.create({
       return response.status(400).json({ error: "make sure your product ID is correct" });
     }
 
-    let path;
-    if (request.file) {
-  path = request.file.path; // URL do Cloudinary
-}
-
     const { name, price, category_id, offer } = request.body;
 
-    await Product.update(
-      {
-        name,
-        price,
-        category_id,
-        path,
-        offer,
-      },
-      {
-        where: {
-          id,
-        },
-      }
-    );
+    await findProduct.update({
+      name,
+      price,
+      category_id,
+      ...(request.file && { path: request.file.path }),
+      offer,
+    });
 
-    return response.status(201).json({ message: "update sucessfully" });
+    return response.status(200).json({ message: "update successfully" });
   }
 
   async index(request, response) {
