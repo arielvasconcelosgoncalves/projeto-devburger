@@ -62,11 +62,12 @@ class ProductController {
   async update(request, response) {
     console.log("===== 📌 UPDATE PRODUCT =====");
 
-    try {
-      console.log("📥 BODY RECEIVED:", request.body);
-      console.log("📸 FILE RECEIVED:", request.file);
-      console.log("🔑 PARAMS:", request.params);
+    console.log("🔥 RAW REQUEST FILE:", request.file); // <-- AQUI
+    console.log("📥 BODY RECEIVED:", request.body);
+    console.log("📸 FILE RECEIVED:", request.file);
+    console.log("🔑 PARAMS:", request.params);
 
+    try {
       // Converter offer string para boolean
       if (request.body.offer === "true") request.body.offer = true;
       if (request.body.offer === "false") request.body.offer = false;

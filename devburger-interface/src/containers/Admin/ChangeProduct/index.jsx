@@ -64,9 +64,7 @@ export function ChangeProduct() {
     productFormData.append("price", data.price * 100);
     productFormData.append("category_id", data.category.id);
     productFormData.append("offer", data.offer);
-    if (data.file && data.file.length > 0) {
-      productFormData.append("file", data.file[0]);
-    }
+    productFormData.append("file", data.file); // ← TEM QUE SER ESSE NOME
 
     try {
       console.log(
