@@ -70,11 +70,6 @@ export function ChangeProduct() {
       productFormData.append("file", data.file[0]);
     }
 
-    console.log("📤 FORM DATA ENVIADO:");
-    for (let pair of productFormData.entries()) {
-      console.log(pair[0], pair[1]);
-    }
-
     try {
       const response = await api.put(
         `/products/${product.id}`,
@@ -85,7 +80,6 @@ export function ChangeProduct() {
       toast.success("Produto editado com sucesso!");
       setTimeout(() => navigate("/admin/products"), 2000);
     } catch (error) {
-      console.log("❌ ERRO DETALHADO:", error.response?.data || error);
       toast.error(
         error.response?.data?.error ||
           error.message ||
