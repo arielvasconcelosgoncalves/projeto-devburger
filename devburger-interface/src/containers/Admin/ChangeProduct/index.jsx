@@ -63,8 +63,10 @@ export function ChangeProduct() {
     productFormData.append("name", data.name);
     productFormData.append("price", data.price * 100);
     productFormData.append("category_id", data.category.id);
-    productFormData.append("file", data.file[0]);
     productFormData.append("offer", data.offer);
+    if (data.file && data.file.length > 0) {
+      productFormData.append("file", data.file[0]);
+    }
 
     await toast.promise(api.put(`/products/${product.id}`, productFormData), {
       pending: "Editando o produto...",
