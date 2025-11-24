@@ -50,9 +50,9 @@ export function ChangeProduct() {
   }, []);
 
   const {
-    register,
     handleSubmit,
     control,
+    register,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -61,32 +61,28 @@ export function ChangeProduct() {
   const onSubmit = async (data) => {
     const productFormData = new FormData();
 
-    // Campos normais
     productFormData.append("name", data.name);
     productFormData.append("price", data.price * 100);
     productFormData.append("category_id", data.category.id);
     productFormData.append("offer", data.offer ? "true" : "false");
 
-    // Se o usuário escolheu um arquivo novo, envia:
     if (data.file && data.file.length > 0) {
       productFormData.append("file", data.file[0]);
     }
 
-    // Log completo do que está indo
     console.log("📤 FORM DATA ENVIADO:");
-    for (let p of productFormData.entries()) {
-      console.log(p[0], p[1]);
+    for (let pair of productFormData.entries()) {
+      console.log(pair[0], pair[1]);
     }
 
     try {
       const response = await api.put(
         `/products/${product.id}`,
-        productFormData // sem headers!
+        productFormData
       );
 
       console.log("📥 RESPOSTA BACKEND:", response.data);
       toast.success("Produto editado com sucesso!");
-
       setTimeout(() => navigate("/admin/products"), 2000);
     } catch (error) {
       console.log("❌ ERRO DETALHADO:", error.response?.data || error);
@@ -124,14 +120,20 @@ export function ChangeProduct() {
         <InputGroup>
           <LabelUpload>
             <ImageIcon />
-            <input
-              type="file"
-              {...register("file")}
-              accept="image/png, image/jpeg"
-              onChange={(value) => {
-                setFileName(value.target.files[0]?.name);
-                register("file").onChange(value);
-              }}
+            <Controller
+              name="file"
+              control={control}
+              defaultValue={null}
+              render={({ field }) => (
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  onChange={(e) => {
+                    field.onChange(e.target.files); // salva o FileList
+                    setFileName(e.target.files[0]?.name);
+                  }}
+                />
+              )}
             />
             {fileName || "Upload do Produto"}
           </LabelUpload>
@@ -152,7 +154,6 @@ export function ChangeProduct() {
                 getOptionValue={(category) => category.id}
                 placeholder="Categorias"
                 menuPortalTarget={document.body}
-                defaultValue={product.category}
               />
             )}
           />
