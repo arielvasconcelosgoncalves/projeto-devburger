@@ -60,67 +60,60 @@ class ProductController {
   }
 
   async update(request, response) {
-    if (request.body.offer === "true") request.body.offer = true;
-    if (request.body.offer === "false") request.body.offer = false;
-
-    console.log("📌 UPDATE PRODUCT CALLED");
-    console.log("BODY RECEIVED:", request.body);
-    console.log("FILE RECEIVED:", request.file);
-
-    const schema = Yup.object({
-      name: Yup.string(),
-      price: Yup.number(),
-      category_id: Yup.number(),
-      offer: Yup.boolean(),
-    });
+    console.log("===== 📌 UPDATE PRODUCT =====");
 
     try {
+      console.log("📥 BODY RECEIVED:", request.body);
+      console.log("📸 FILE RECEIVED:", request.file);
+      console.log("🔑 PARAMS:", request.params);
+
+      // Converter offer string para boolean
+      if (request.body.offer === "true") request.body.offer = true;
+      if (request.body.offer === "false") request.body.offer = false;
+
+      const schema = Yup.object({
+        name: Yup.string(),
+        price: Yup.number(),
+        category_id: Yup.number(),
+        offer: Yup.boolean(),
+      });
+
       schema.validateSync(request.body, { abortEarly: false });
-    } catch (err) {
-      console.log("❌ VALIDATION ERROR:", err);
-      return response.status(400).json({ error: err.errors });
-    }
 
-    const { admin: isAdmin } = await User.findByPk(request.userId);
-    console.log("IS ADMIN?", isAdmin);
+      const { admin: isAdmin } = await User.findByPk(request.userId);
+      if (!isAdmin) {
+        console.log("❌ Usuário não é admin");
+        return response.status(401).json({ error: "not authorized" });
+      }
 
-    if (!isAdmin) {
-      console.log("❌ BLOCKED: NOT ADMIN");
-      return response.status(401).json();
-    }
+      const { id } = request.params;
+      const findProduct = await Product.findByPk(id);
 
-    const { id } = request.params;
-    console.log("PRODUCT ID:", id);
+      if (!findProduct) {
+        console.log("❌ Produto não encontrado");
+        return response.status(400).json({ error: "Invalid product ID" });
+      }
 
-    const findProduct = await Product.findByPk(id);
-    console.log("PRODUCT FOUND:", findProduct);
+      console.log("🔧 ATUALIZANDO PRODUTO...");
 
-    if (!findProduct) {
-      console.log("❌ PRODUCT NOT FOUND");
-      return response.status(400).json({ error: "make sure your product ID is correct" });
-    }
-
-    const { name, price, category_id, offer } = request.body;
-
-    try {
-      const updatePayload = {
-        name,
-        price,
-        category_id,
-        offer,
+      await findProduct.update({
+        name: request.body.name,
+        price: request.body.price,
+        category_id: request.body.category_id,
+        offer: request.body.offer,
         ...(request.file && { path: request.file.path }),
-      };
+      });
 
-      console.log("UPDATE PAYLOAD:", updatePayload);
-
-      await findProduct.update(updatePayload);
-
-      console.log("✅ PRODUCT UPDATED SUCCESSFULLY");
-
-      return response.status(200).json({ message: "update successfully" });
+      console.log("✅ PRODUTO ATUALIZADO COM SUCESSO");
+      return response.json({ message: "updated successfully" });
     } catch (error) {
-      console.log("🔥 UPDATE ERROR:", error);
-      return response.status(500).json({ error: "Internal error", details: error.message });
+      console.log("🔥 ERRO CAPTURADO NO BACKEND:");
+      console.error(error); // <-- ESSA LINHA MOSTRA O ERRO REAL
+
+      return response.status(500).json({
+        error: "Internal server error",
+        details: error.message,
+      });
     }
   }
 
