@@ -113,9 +113,6 @@ class ProductController {
         ],
       });
 
-      console.log("PRODUCTS RETURNED:");
-      console.dir(products, { depth: null }); // <-- aqui!
-
       return response.json(products);
     } catch (error) {
       return response.status(500).json({ error: "Internal server error" });
