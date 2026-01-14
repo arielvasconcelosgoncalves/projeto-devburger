@@ -2,7 +2,6 @@ import "dotenv/config.js";
 
 export default {
   dialect: "postgres",
-  url: process.env.DATABASE_URL,
   host: process.env.DB_HOST,
   username: process.env.DB_USER,
   password: process.env.DB_PASS,
@@ -10,14 +9,6 @@ export default {
   port: process.env.DB_PORT || 5432,
   define: {
     underscored: true,
-    underscoredAll: true,
     timestamps: true,
-    freezeTableName: false,
-  },
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false, // necessário no Render
-    },
   },
 };

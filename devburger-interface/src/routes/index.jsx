@@ -19,9 +19,14 @@ import { ProtectedRoute } from "./ProtectRoute";
 export function Router() {
   return (
     <Routes>
-      <Route path="/" element={<ProtectedRoute>
-        <UserLayout />
-      </ProtectedRoute>}>
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <UserLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/cart" element={<Cart />} />
@@ -29,9 +34,14 @@ export function Router() {
         <Route path="/complete-payment" element={<CompletePayment />} />
       </Route>
 
-      <Route path="/admin" element={<ProtectedRoute>
-        <AdminLayout />
-      </ProtectedRoute>}>
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
         <Route path="/admin/orders" element={<Orders />}></Route>
         <Route path="/admin/products" element={<Products />}></Route>
         <Route path="/admin/new-product" element={<NewProduct />}></Route>

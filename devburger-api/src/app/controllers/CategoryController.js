@@ -1,8 +1,6 @@
 import * as Yup from "yup";
 import Category from "../models/Category.js";
 import User from "../models/User.js";
-import cloudinary from "../../config/cloudinary.js";
-import fs from "fs";
 
 class CategoryController {
   async store(request, response) {
@@ -17,33 +15,23 @@ class CategoryController {
     }
 
     const { admin: isAdmin } = await User.findByPk(request.userId);
+
     if (!isAdmin) {
       return response.status(401).json();
     }
 
-    const { file } = request;
-    if (!file) {
-      return response.status(400).json({ error: "Image is required" });
-    }
-
+    const { filename: path } = request.file;
     const { name } = request.body;
 
     const categoryExists = await Category.findOne({ where: { name } });
+
     if (categoryExists) {
       return response.status(400).json({ error: "Category already exists" });
     }
 
-    // 🔥 Upload no Cloudinary
-    const uploadedImage = await cloudinary.uploader.upload(file.path, {
-      folder: "categories",
-    });
-
-    // Remove a imagem temporária
-    fs.unlinkSync(file.path);
-
     const { id } = await Category.create({
       name,
-      path: uploadedImage.secure_url, // 🔥 Guarda só a URL
+      path,
     });
 
     return response.status(201).json({ id, name });
@@ -61,33 +49,25 @@ class CategoryController {
     }
 
     const { admin: isAdmin } = await User.findByPk(request.userId);
+
     if (!isAdmin) {
       return response.status(401).json();
     }
 
     const { id } = request.params;
-    const category = await Category.findByPk(id);
 
-    if (!category) {
+    const categoryExists = await Category.findByPk(id);
+
+    if (!categoryExists) {
       return response.status(400).json({ message: "Make sure your category ID is correct" });
     }
 
-    let path = category.path;
-    const { file } = request;
-
-    if (file) {
-      const uploadedImage = await cloudinary.uploader.upload(file.path, {
-        folder: "categories",
-      });
-
-      fs.unlinkSync(file.path);
-
-      path = uploadedImage.secure_url; // 🔥 Atualiza apenas a URL
+    let path;
+    if (request.file) {
+      path = request.file.filename;
     }
-
     const { name } = request.body;
 
-    // Verifica se o novo nome já existe (se quiser mudar o nome)
     if (name) {
       const categoryNameExists = await Category.findOne({ where: { name } });
 
@@ -102,11 +82,13 @@ class CategoryController {
         path,
       },
       {
-        where: { id },
+        where: {
+          id,
+        },
       }
     );
 
-    return response.status(200).json({ message: "Category updated successfully" });
+    return response.status(200).json();
   }
 
   async index(request, response) {

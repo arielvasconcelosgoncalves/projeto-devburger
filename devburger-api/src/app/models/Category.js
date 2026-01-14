@@ -9,7 +9,8 @@ class Category extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            return this.path; // URL final é exatamente a URL do Cloudinary
+            const baseURL = process.env.APP_URL || "http://localhost:3001";
+            return `${baseURL}/category-file/${this.path}`;
           },
         },
       },

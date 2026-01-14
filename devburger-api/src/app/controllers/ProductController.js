@@ -17,106 +17,88 @@ class ProductController {
     } catch (err) {
       return response.status(400).json({ error: err.errors });
     }
-
     const { admin: isAdmin } = await User.findByPk(request.userId);
 
     if (!isAdmin) {
       return response.status(401).json();
     }
 
-    const imageURL = request.file?.path;
-
+    const { filename: path } = request.file;
     const { name, price, category_id, offer } = request.body;
 
-    try {
-      const product = await Product.create({
-        name,
-        price,
-        category_id,
-        path: imageURL,
-        offer,
-      });
+    const product = await Product.create({
+      name,
+      price,
+      category_id,
+      path,
+      offer,
+    });
 
-      return response.status(201).json(product);
-    } catch (error) {
-      return response.status(500).json({ error: "Internal error", details: error.message });
-    }
+    return response.status(201).json(product);
   }
 
   async update(request, response) {
-    console.log("===== 📌 PRODUCT UPDATE =====");
-    console.log("BODY:", request.body);
-    console.log("FILE:", request.file);
+    const schema = Yup.object({
+      name: Yup.string(),
+      price: Yup.number(),
+      category_id: Yup.number(),
+      offer: Yup.boolean(),
+    });
 
     try {
-      // Convertendo tipos manualmente
-      if (request.body.price) {
-        request.body.price = Number(request.body.price);
-      }
-
-      if (request.body.category_id) {
-        request.body.category_id = Number(request.body.category_id);
-      }
-
-      if (request.body.offer === "true") request.body.offer = true;
-      if (request.body.offer === "false") request.body.offer = false;
-
-      const schema = Yup.object({
-        name: Yup.string(),
-        price: Yup.number(),
-        category_id: Yup.number(),
-        offer: Yup.boolean(),
-      });
-
       schema.validateSync(request.body, { abortEarly: false });
-
-      const { admin: isAdmin } = await User.findByPk(request.userId);
-      if (!isAdmin) {
-        return response.status(401).json({ error: "not authorized" });
-      }
-
-      const { id } = request.params;
-      const findProduct = await Product.findByPk(id);
-
-      if (!findProduct) {
-        return response.status(400).json({ error: "Invalid product ID" });
-      }
-
-      await findProduct.update({
-        name: request.body.name ?? findProduct.name,
-        price: request.body.price ?? findProduct.price,
-        category_id: request.body.category_id ?? findProduct.category_id,
-        offer: request.body.offer ?? findProduct.offer,
-        ...(request.file && { path: request.file.path }),
-      });
-
-      return response.json({ message: "updated successfully" });
-    } catch (error) {
-      console.log("🔥 UPDATE ERROR:", error);
-
-      return response.status(500).json({
-        error: "Internal server error",
-        details: error.message,
-      });
+    } catch (err) {
+      return response.status(400).json({ error: err.errors });
     }
+    const { admin: isAdmin } = await User.findByPk(request.userId);
+
+    if (!isAdmin) {
+      return response.status(401).json();
+    }
+
+    const { id } = request.params;
+    const findProduct = await Product.findByPk(id);
+
+    if (!findProduct) {
+      return response.status(400).json({ error: "make sure your product ID is correct" });
+    }
+
+    let path;
+    if (request.file) {
+      path = request.file.filename;
+    }
+
+    const { name, price, category_id, offer } = request.body;
+
+    await Product.update(
+      {
+        name,
+        price,
+        category_id,
+        path,
+        offer,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    );
+
+    return response.status(201).json({ message: "update sucessfully" });
   }
 
   async index(request, response) {
-    try {
-      const products = await Product.findAll({
-        include: [
-          {
-            model: Category,
-            as: "category",
-            attributes: ["id", "name"],
-          },
-        ],
-      });
-
-      return response.json(products);
-    } catch (error) {
-      return response.status(500).json({ error: "Internal server error" });
-    }
+    const products = await Product.findAll({
+      include: [
+        {
+          model: Category,
+          as: "category",
+          attributes: ["id", "name"],
+        },
+      ],
+    });
+    return response.json(products);
   }
 }
 

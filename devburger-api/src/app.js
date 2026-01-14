@@ -23,7 +23,8 @@ class App {
     this.app.use(express.json());
 
     // CORREÇÃO AQUI — usar __dirname do ESM
-    this.app.use("/uploads", express.static(path.resolve(__dirname, "..", "uploads")));
+    this.app.use("/product-file", express.static(path.resolve(__dirname, "..", "uploads")));
+    this.app.use("/category-file", express.static(path.resolve(__dirname, "..", "uploads")));
   }
 
   routes() {

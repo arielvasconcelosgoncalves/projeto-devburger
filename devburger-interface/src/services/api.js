@@ -8,10 +8,10 @@ api.interceptors.request.use((config) => {
   const userData = localStorage.getItem("devburger:userData");
   const token = userData && JSON.parse(userData).token;
   if (token) {
-  config.headers.authorization = `Bearer ${token}`;
-} else {
-  delete config.headers.authorization;
-}
+    config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete config.headers.Authorization;
+  }
 
   return config;
 });

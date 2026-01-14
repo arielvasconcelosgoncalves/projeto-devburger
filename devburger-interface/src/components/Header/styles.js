@@ -93,7 +93,7 @@ export const Logout = styled.button`
   }
 `;
 
-export const LinkContainer = styled(Link)`
+export const LinkContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
