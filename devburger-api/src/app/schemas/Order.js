@@ -11,38 +11,40 @@ const OrderSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      asaasCustomerId: {
+        type: String,
+        required: false,
+      },
     },
+
     products: [
       {
-        id: {
-          type: Number,
-          required: true,
-        },
-        name: {
-          type: String,
-          required: true,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-        category: {
-          type: String,
-          required: true,
-        },
-        url: {
-          type: String,
-          required: true,
-        },
-        quantity: {
-          type: String,
-          required: true,
-        },
+        id: Number,
+        name: String,
+        price: Number,
+        category: String,
+        url: String,
+        quantity: Number,
       },
     ],
+
+    total: {
+      type: Number,
+      required: true,
+    },
+
     status: {
       type: String,
       required: true,
+    },
+
+    paid: {
+      type: Boolean,
+      default: false,
+    },
+
+    paymentId: {
+      type: String,
     },
   },
   { timestamps: true }

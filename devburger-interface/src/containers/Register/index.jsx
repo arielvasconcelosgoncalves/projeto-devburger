@@ -25,6 +25,10 @@ export function Register() {
         .string()
         .email("Digite um e-mail válido")
         .required("O e-mail é obrigatório"),
+      cpf: yup
+        .string()
+        .required("O CPF é obrigatório")
+        .matches(/^\d{11}$/, "CPF deve conter exatamente 11 números"),
       password: yup
         .string()
         .min(6, "A senha deve ter pelo menos 6 caracteres")
@@ -50,11 +54,12 @@ export function Register() {
         {
           name: data.name,
           email: data.email,
+          cpf: data.cpf,
           password: data.password,
         },
         {
           validateStatus: () => true,
-        }
+        },
       );
 
       if (status === 200 || status === 201) {
@@ -91,6 +96,16 @@ export function Register() {
             <label>Email</label>
             <input type="email" {...register("email")} />
             <p>{errors?.email?.message}</p>
+          </InputContainer>
+          <InputContainer>
+            <label>CPF</label>
+            <input
+              type="text"
+              inputMode="numeric"
+              maxLength={11}
+              {...register("cpf")}
+            />
+            <p>{errors?.cpf?.message}</p>
           </InputContainer>
           <InputContainer>
             <label>Senha</label>

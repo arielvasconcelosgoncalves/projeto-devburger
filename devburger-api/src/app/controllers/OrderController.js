@@ -40,6 +40,11 @@ class OrderController {
     const formattedProducts = findProducts.map((product) => {
       const productIndex = products.findIndex((item) => item.id === product.id);
 
+      // const total = formattedProducts.reduce(
+      //   (sum, product) => sum + product.price * product.quantity,
+      //   0
+      // );
+
       const newProduct = {
         id: product.id,
         name: product.name,
@@ -51,12 +56,20 @@ class OrderController {
       return newProduct;
     });
 
+    const total = formattedProducts.reduce(
+      (sum, product) => sum + product.price * product.quantity,
+      0
+    );
+    const user = await User.findByPk(request.userId);
     const order = {
       user: {
         id: request.userId,
         name: request.userName,
+        asaasCustomerId: user.asaasCustomerId,
+        cpf: user.cpf,
       },
       products: formattedProducts,
+      total,
       status: "pedido realizado",
     };
 

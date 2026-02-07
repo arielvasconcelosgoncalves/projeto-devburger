@@ -1,6 +1,6 @@
 import Cart from "../../assets/img/Cart.svg";
 import { useCart } from "../../hooks/CartContext";
-import { ContainerButton, ButtonGroup } from "./styles";
+import { ContainerButton, ButtonGroup, QuantityControl } from "./styles";
 
 export function CartButton({ product, ...props }) {
   const { cartProducts, decreaseProduct, increaseProduct } = useCart();
@@ -14,11 +14,11 @@ export function CartButton({ product, ...props }) {
         </ContainerButton>
       ) : (
         <ButtonGroup>
-          <div>
+          <QuantityControl>
             <button onClick={() => decreaseProduct(product.id)}>-</button>
             <h3>{productInCart.quantity}</h3>
             <button onClick={() => increaseProduct(product.id)}>+</button>
-          </div>
+          </QuantityControl>
         </ButtonGroup>
       )}
     </>

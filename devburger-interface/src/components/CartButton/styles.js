@@ -25,18 +25,10 @@ export const ButtonGroup = styled.div`
   border: 0;
   border-radius: 5px;
   gap: 12px;
-  div {
-    width: 100%;
-    height: 52px;
-    background: #975ba6;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-  }
   button {
     display: flex;
     align-items: center;
+    flex-direction: row;
     justify-content: center;
     height: 30px;
     width: 30px;
@@ -54,4 +46,14 @@ export const ButtonGroup = styled.div`
     color: #fff;
     font-size: 30px;
   }
+`;
+
+export const QuantityControl = styled.div`
+  width: 100%;
+  height: 52px;
+  background: #975ba6;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-evenly;
 `;

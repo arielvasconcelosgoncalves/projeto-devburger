@@ -41,7 +41,11 @@ export function CheckoutForm() {
     if (error) {
       setMessage(error.message);
       toast.error(error.message);
-    } else if (paymentIntent && paymentIntent.status === "succeeded") {
+    } else if (
+      paymentIntent &&
+      (paymentIntent.status === "succeeded" ||
+        paymentIntent.status === "processing")
+    ) {
       try {
         const products = cartProducts.map((product) => {
           return {

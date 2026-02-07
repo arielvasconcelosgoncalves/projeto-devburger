@@ -7,6 +7,7 @@
 
 */
 
+import { Op } from "sequelize";
 import User from "../models/User.js";
 import { v4 } from "uuid";
 import * as Yup from "yup";
@@ -18,6 +19,9 @@ class UserController {
       email: Yup.string().email().required(),
       password: Yup.string().min(6).required(),
       admin: Yup.boolean(),
+      cpf: Yup.string()
+        .required()
+        .matches(/^\d{11}$/, "CPF deve conter exatamente 11 números"),
     });
 
     /*const isValid = await schema.isValid(request.body);
@@ -32,14 +36,18 @@ class UserController {
       return response.status(400).json({ error: err.errors });
     }
 
-    const { name, email, password, admin } = request.body;
+    const { name, email, password, admin, cpf } = request.body;
 
-    const userExists = await User.findOne({ where: { email } });
+    const userExists = await User.findOne({
+      where: {
+        [Op.or]: [{ email }, { cpf }],
+      },
+    });
 
     //console.log(userExists);
 
     if (userExists) {
-      return response.status(409).json({ error: "User already exists." });
+      return response.status(409).json({ error: "Usuário ou CPF já cadastrados." });
     }
 
     const user = await User.create({
@@ -48,12 +56,14 @@ class UserController {
       email,
       password,
       admin,
+      cpf,
     });
     return response.status(201).json({
       id: user.id,
       name: user.name,
       email: user.email,
       admin: user.admin,
+      cpf: user.cpf,
     });
   }
 }
