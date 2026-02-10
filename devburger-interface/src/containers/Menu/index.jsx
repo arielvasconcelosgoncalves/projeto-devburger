@@ -4,13 +4,13 @@ import {
   CategoryMenu,
   ProductsContainer,
   CategoryButton,
-  Back,
 } from "./styles.js";
 import { useEffect, useState } from "react";
 import { api } from "../../services/api.js";
 import { formatPrice } from "../../utils/formatPrice.js";
 import { CartProducts } from "../../components/CartProducts/index.jsx";
 import { useLocation, useNavigate } from "react-router-dom";
+import { VscChevronLeft } from "react-icons/vsc";
 
 export function Menu() {
   const { search } = useLocation();
@@ -73,10 +73,12 @@ export function Menu() {
           <span>Esse cardápio está irressistível</span>
         </h1>
       </Banner>
-      <Back
+      <VscChevronLeft
         onClick={() => {
           navigate("/", { replace: true });
         }}
+        size={45}
+        style={{ margin: "20px", cursor: "pointer" }}
       />
       <CategoryMenu>
         {categories.map((category) => {
@@ -91,7 +93,7 @@ export function Menu() {
                   },
                   {
                     replace: true,
-                  }
+                  },
                 );
                 setActiveCategory(category.id);
               }}

@@ -57,7 +57,7 @@ class OrderController {
     });
 
     const total = formattedProducts.reduce(
-      (sum, product) => sum + product.price * product.quantity,
+      (sum, product) => sum + (product.price / 100) * product.quantity,
       0
     );
     const user = await User.findByPk(request.userId);

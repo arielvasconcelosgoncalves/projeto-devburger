@@ -21,7 +21,7 @@ class AsaasWebhookController {
           { paymentId: payment.id },
           {
             paid: true,
-            status: "paid",
+            status: "Pedido Realizado",
           },
           { new: true }
         );

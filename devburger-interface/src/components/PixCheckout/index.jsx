@@ -3,6 +3,8 @@ import { api } from "../../services/api";
 import { toast } from "react-toastify";
 import { useCart } from "../../hooks/CartContext";
 import { useEffect } from "react";
+import { Container, DetailsContainer } from "./styles";
+import { useNavigate } from "react-router-dom";
 
 export function PixCheckout() {
   const { cartProducts } = useCart();
@@ -10,6 +12,8 @@ export function PixCheckout() {
   const [loading, setLoading] = useState(false);
   const [pixData, setPixData] = useState(null);
   const [paymentConfirmed, setPaymentConfirmed] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!orderId || paymentConfirmed) return;
@@ -68,48 +72,55 @@ export function PixCheckout() {
     }
   };
   return (
-    <div>
-      {!orderId ? (
-        <button onClick={handleCreateOrder} disabled={loading}>
-          {loading ? "Criando pedido..." : "Gerar Pix"}
-        </button>
-      ) : (
-        <p>Pedido criado: {orderId}</p>
-      )}
-      {/* PASSO 2 — Pedido criado, gerar PIX */}
-      {orderId && !pixData && (
-        <>
-          <button onClick={handleCreatePix}>Gerar QR Code PIX</button>
-        </>
-      )}
+    <Container>
+      <DetailsContainer>
+        {!orderId ? (
+          <button onClick={handleCreateOrder} disabled={loading}>
+            {loading ? "Criando pedido..." : "Gerar Pix"}
+          </button>
+        ) : (
+          <p>Pedido criado: {orderId}</p>
+        )}
+        {/* PASSO 2 — Pedido criado, gerar PIX */}
+        {orderId && !pixData && (
+          <>
+            <button onClick={handleCreatePix}>Gerar QR Code PIX</button>
+          </>
+        )}
 
-      {/* PASSO 3 — PIX gerado */}
-      {pixData && (
-        <div>
-          <h3>Escaneie o QR Code</h3>
+        {/* PASSO 3 — PIX gerado */}
+        {pixData && (
+          <div>
+            <h3>Escaneie o QR Code</h3>
 
-          <img
-            src={`data:image/png;base64,${pixData.qrCode}`}
-            alt="QR Code Pix"
-            style={{ width: 250 }}
-          />
+            <img
+              src={`data:image/png;base64,${pixData.qrCode}`}
+              alt="QR Code Pix"
+              style={{ width: 250 }}
+            />
 
-          <p>Ou copie e cole:</p>
+            <p>Ou copie e cole:</p>
 
-          <textarea
-            readOnly
-            value={pixData.payload}
-            rows={4}
-            style={{ width: "100%" }}
-          />
-        </div>
-      )}
-      {/* PASSO 4 — Pagamento confirmado */}
-      {paymentConfirmed ? (
-        <h2>✅ Pagamento confirmado com sucesso!</h2>
-      ) : (
-        <p>Aguardando confirmação do pagamento...</p>
-      )}
-    </div>
+            <textarea
+              readOnly
+              value={pixData.payload}
+              rows={4}
+              style={{ width: "100%" }}
+            />
+          </div>
+        )}
+        {/* PASSO 4 — Pagamento confirmado */}
+        {paymentConfirmed ? (
+          <div className="divButton">
+            <h2>✅ Pagamento confirmado com sucesso!</h2>
+            <button className="buttonPix" onClick={() => navigate("/")}>
+              Voltar para Loja
+            </button>
+          </div>
+        ) : (
+          <p>Aguardando confirmação do pagamento...</p>
+        )}
+      </DetailsContainer>
+    </Container>
   );
 }

@@ -1,10 +1,12 @@
 import styled from "styled-components";
+import Background from "../../assets/img/background.svg";
 
 export const OptionsDiv = styled.div`
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  background-image: url(${Background});
 `;
 export const ButtonPayment = styled.button`
   background-color: #975ba6;
@@ -21,9 +23,13 @@ export const ButtonPayment = styled.button`
 `;
 
 export const Title = styled.h2`
-  margin-top: 30px;
+  padding-top: 30px;
+  .text {
+    background-color: #fff;
+  }
 `;
 
 export const Container = styled.div`
   height: 100vh;
+  background-image: url(${Background});
 `;

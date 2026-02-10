@@ -3,13 +3,13 @@ import { Button } from "../Button";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { useCart } from "../../hooks/CartContext.jsx";
-import { api } from "../../services/api.js";
+// import { api } from "../../services/api.js";
 import { formatPrice } from "../../utils/formatPrice.js";
 import { useNavigate } from "react-router-dom";
 
 export function CartResume() {
   const [finalPrice, setFinalPrice] = useState(0);
-  const [deliveryTax] = useState(500);
+  const [deliveryTax] = useState(0);
   const { cartProducts } = useCart();
   const navigate = useNavigate();
 
@@ -20,18 +20,17 @@ export function CartResume() {
     setFinalPrice(sumAllItems);
   }, [cartProducts]);
 
-  const submitOrder = async () => {
-    const products = cartProducts.map((product) => {
-      return {
-        id: product.id,
-        quantity: product.quantity,
-        price: product.price,
-      };
-    });
+  const submitOrder = () => {
+    const products = cartProducts.map((product) => ({
+      id: product.id,
+      quantity: product.quantity,
+      price: product.price,
+    }));
 
     try {
-      const { data } = await api.post("/create-payment-intent", { products });
-      navigate("/checkout", { state: data });
+      navigate("/checkout", {
+        state: { products },
+      });
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
       toast.error("Erro, tente novamente", {
